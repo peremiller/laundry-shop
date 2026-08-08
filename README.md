@@ -52,3 +52,4 @@ delete the sample customers and orders when you start entering live data.
 
 Revenue and report figures are computed only from whatever orders exist in your local
 data, including seeded ones, until you remove them.
+

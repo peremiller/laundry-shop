@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>SudsFlow — Laundry Shop Manager</title>
+<meta name="theme-color" content="#032943">
+<link rel="icon" type="image/png" href="assets/sudsflow-logo-mark.png">
+<link rel="preload" as="image" href="assets/laundry-basket-line.png">
+<link rel="stylesheet" href="assets/icons/remixicon.css">
 <style>
 :root{
   --bg:#f4f8f9; --card:#ffffff; --ink:#0f1c24; --muted:#5f7480; --line:#dfe9ec;
@@ -238,13 +242,184 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--brand);border-co
 .blabel{width:118px;font-size:12.5px;color:var(--muted);font-weight:600;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:0}
 .bval{font-size:12.5px;font-weight:700;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* ---------- professional desktop experience ---------- */
+@font-face{
+  font-family:"Manrope";
+  src:url("assets/fonts/manrope-latin-variable.woff2") format("woff2-variations");
+  font-style:normal;
+  font-weight:200 800;
+  font-display:swap;
+}
+:root{
+  --bg:#f8f8f4;--card:#fffefa;--ink:#0b2440;--muted:#66788b;--line:#dfe7e4;
+  --brand:#0b8f87;--brand-2:#16a89d;--brand-soft:#e0f6f1;--brand-ink:#08736d;
+  --ok:#078a66;--ok-soft:#e1f5ea;--warn:#d97706;--warn-soft:#fff1d6;
+  --bad:#d83b32;--bad-soft:#fde7e4;--violet:#7652bc;--violet-soft:#eee8fb;
+  --slate:#53677c;--slate-soft:#e9eef1;--navy:#062f4b;--navy-deep:#032943;
+  --paper:#fffdfa;--paper-ink:#16212c;
+  --shadow:0 1px 2px rgba(6,47,75,.04),0 12px 28px -22px rgba(6,47,75,.3);
+  --radius:13px;
+}
+html,body{min-height:100%}
+body{background:var(--bg);font-family:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--ink);font-size:14px;letter-spacing:-.01em;overflow-x:hidden}
+button,input,select,textarea{font-family:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+  outline:3px solid rgba(20,184,166,.3);outline-offset:2px}
+
+.app-shell{min-height:100vh;display:flex;background:var(--bg)}
+.sidebar{position:sticky;top:0;align-self:flex-start;width:218px;height:100vh;flex:0 0 218px;
+  padding:24px 16px 18px;display:flex;flex-direction:column;color:#eef9f8;
+  background:var(--navy-deep);box-shadow:10px 0 28px -28px rgba(1,23,38,.9);z-index:35}
+.brand-lockup{display:flex;align-items:center;gap:12px;padding:0 6px 22px}
+.brand-mark{width:58px;height:58px;object-fit:contain;flex:0 0 auto;background:#fff;border-radius:50%;padding:3px;
+  box-shadow:0 8px 24px -18px rgba(0,0,0,.65)}
+.brand-copy{min-width:0}
+.brand-name{font-size:19px;font-weight:800;line-height:1.08;letter-spacing:-.035em}
+.brand-name span{display:block;color:#4be1d0}
+.brand-tag{margin-top:5px;color:#b5d1d8;font-size:10px;line-height:1.3}
+.side-nav{display:flex;flex-direction:column;gap:7px}
+.side-nav .tab{flex:none;min-width:0;width:100%;display:flex;align-items:center;justify-content:flex-start;
+  gap:12px;border:0;padding:12px 13px;border-radius:11px;background:transparent;color:#dcebef;
+  font-size:14px;font-weight:650;box-shadow:none;transition:background .16s,color .16s,transform .16s}
+.side-nav .tab i{font-size:20px;width:22px;text-align:center}
+.side-nav .tab:hover{background:rgba(255,255,255,.07);color:#fff;transform:translateX(2px)}
+.side-nav .tab.on{background:#0c8b86;color:#fff;box-shadow:0 10px 28px -22px #25d9c8}
+.side-nav .tab.on i{color:#fff}
+.sidebar-spacer{flex:1;min-height:26px}
+.side-divider{height:1px;background:rgba(202,228,232,.22);margin:13px 2px}
+.staff-card,.side-settings,.side-date{display:flex;align-items:center;gap:10px;padding:8px 6px;color:#ecf8f8}
+.staff-avatar{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:#20b9a9;
+  color:#fff;font-weight:800;font-size:13px;box-shadow:0 8px 24px -16px #28e5d2}
+.staff-copy{min-width:0;flex:1}
+.staff-copy strong{display:block;font-size:13px}.staff-copy span{display:block;color:#b8d0d6;font-size:11px}
+.side-settings{width:100%;border:0;background:transparent;border-radius:10px;cursor:pointer;font-weight:650;text-align:left}
+.side-settings:hover{background:rgba(255,255,255,.07)}
+.side-settings i,.side-date i{font-size:20px}
+.side-date{align-items:flex-start;color:#c4d9de;font-size:11px;line-height:1.5}
+.side-date span{display:block}
+
+.workspace-area{min-width:0;flex:1}
+.workspace-header{max-width:1420px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;
+  gap:22px;padding:26px 24px 20px}
+.page-intro{display:flex;align-items:center;gap:13px;min-width:0}
+.greeting-icon{width:42px;height:42px;display:grid;place-items:center;flex:0 0 auto;color:#f3a713;font-size:32px}
+.page-eyebrow{color:var(--brand);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.09em}
+.page-title{margin:3px 0 2px;font-size:29px;line-height:1.15;font-weight:800;letter-spacing:-.045em;color:var(--ink)}
+.page-subtitle{margin:0;color:var(--muted);font-size:13px}
+.header-actions{display:flex;align-items:center;gap:14px;flex:0 0 auto}
+.header-date{display:flex;align-items:center;gap:8px;color:#40566b;font-weight:600;font-size:13px;white-space:nowrap}
+.header-date i{font-size:18px;color:var(--navy)}
+.primary-action{display:inline-flex;align-items:center;gap:9px;border:0;border-radius:11px;padding:12px 18px;
+  background:var(--brand);color:#fff;box-shadow:0 12px 24px -18px rgba(5,108,102,.8);font-size:14px;font-weight:800;cursor:pointer}
+.primary-action:hover{background:#087c75}.primary-action i{font-size:20px}
+.screen{width:100%;max-width:1420px;margin:0 auto;padding:0 24px 38px}
+
+.pipeline-pro{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;background:var(--card);
+  border:1px solid var(--line);border-radius:var(--radius);padding:14px 10px;margin-bottom:16px;overflow:visible;
+  box-shadow:var(--shadow)}
+.pipeline-pro .pipeseg{position:relative;min-width:0;display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:7px 18px 10px 10px;background:transparent;border:0;border-radius:0;box-shadow:none;text-align:left}
+.pipeline-pro .pipeseg:not(:last-child){border-right:1px solid var(--line)}
+.pipeline-pro .pipeseg.empty-seg{opacity:.58}
+.stage-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;font-size:20px;flex:0 0 auto}
+.stage-received .stage-icon{background:#eef2f6;color:#53677c}.stage-washing .stage-icon{background:#e2f5fa;color:#087ca0}
+.stage-drying .stage-icon{background:#fff0db;color:#d97706}.stage-folding .stage-icon{background:#f0eafc;color:#7652bc}
+.stage-ready .stage-icon{background:#e1f5ea;color:#078a66}.stage-claimed .stage-icon{background:#edf1f3;color:#526579}
+.stage-copy{min-width:0}.stage-copy .k{font-size:15px;line-height:1.1}.stage-copy .s{margin-top:4px;font-size:10px;letter-spacing:.03em}
+.stage-arrow{position:absolute;right:-7px;z-index:2;padding:2px;background:var(--card);color:#8ca0ae;font-size:18px}
+.stage-underline{position:absolute;left:12px;right:12px;bottom:0;height:2px;border-radius:3px;background:currentColor;opacity:.85}
+.stage-received{color:#53677c}.stage-washing{color:#0b8f87}.stage-drying{color:#d97706}.stage-folding{color:#7652bc}
+.stage-ready{color:#078a66}.stage-claimed{color:#53677c}
+
+.kpi-grid{display:grid;grid-template-columns:1.35fr repeat(3,1fr);gap:12px;margin-bottom:16px}
+.kpi{min-height:118px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.kpi-label{color:#53677c;font-size:12px;font-weight:700}.kpi-value{display:block;margin-top:8px;color:var(--ink);
+  font-size:28px;line-height:1;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.kpi-meta{margin-top:9px;color:var(--muted);font-size:10px;font-weight:650}
+.kpi-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:50%;background:#edf7f7;color:var(--brand);font-size:27px}
+.kpi-sales{background:#0b8f87;border-color:#0b8f87;color:#fff;overflow:hidden}
+.kpi-sales .kpi-label,.kpi-sales .kpi-value,.kpi-sales .kpi-meta{color:#fff}.kpi-sales .kpi-meta{opacity:.76}
+.sales-illustration{width:112px;height:86px;object-fit:contain;opacity:.78;flex:0 0 auto}
+.kpi-unpaid .kpi-icon{background:#fdebe8;color:var(--bad)}
+
+.dash-layout{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:16px;align-items:start}
+.dash-main{min-width:0;display:flex;flex-direction:column;gap:12px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 16px;border-bottom:1px solid var(--line)}
+.panel-title{display:flex;align-items:center;gap:10px;min-width:0}.panel-title i{font-size:20px;color:var(--brand)}
+.panel-title strong{display:block;font-size:14px}.panel-title>div>span{display:block;margin-top:2px;color:var(--muted);font-size:10px}
+.panel-title .pill{display:inline-flex;margin:0 0 0 5px;padding:2px 7px;color:var(--ok);font-size:9px;vertical-align:2px}
+.panel-link{display:inline-flex;align-items:center;gap:5px;border:0;background:transparent;color:var(--brand);font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
+.ready-order{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;padding:14px 16px;border-left:4px solid var(--ok)}
+.ready-order .order-primary{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.ready-order .order-secondary{margin-top:5px;color:var(--muted);font-size:11px}.ready-action{text-align:right}
+.ready-action strong{display:block;margin-bottom:8px;font-size:15px;font-variant-numeric:tabular-nums}
+.next.next-strong{display:inline-flex;align-items:center;gap:6px;background:var(--ok);color:#fff;padding:8px 12px}
+
+.orders-head,.order-data-row{display:grid;grid-template-columns:72px 1.6fr 1fr 86px 82px 64px 64px 112px 20px;gap:8px;align-items:center}
+.orders-head{padding:8px 16px;background:#f6f8f6;color:#66788b;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.order-data-row{min-height:55px;padding:8px 16px;border-top:1px solid var(--line);font-size:11px;transition:background .15s}
+.order-data-row:hover{background:#fbfcfa}.order-data-row:first-of-type{border-top:0}
+.order-data-row .ocode{padding:0;background:transparent;font-family:"Manrope",sans-serif;font-size:11px;color:var(--ink)}
+.order-customer{min-width:0}.order-customer strong{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.order-customer span{display:block;margin-top:2px;color:var(--muted);font-size:9px;white-space:nowrap}
+.order-load,.stage-time,.order-amount{font-variant-numeric:tabular-nums;white-space:nowrap}.stage-time.aged{color:var(--bad);font-weight:800}
+.row-stage{display:inline-flex;align-items:center;gap:5px;width:max-content;max-width:100%;padding:5px 8px;border-radius:999px;font-size:9px;font-weight:800}
+.row-stage i{font-size:12px}.row-more{border:0;background:transparent;color:#668092;padding:5px;cursor:pointer}
+.order-next{display:inline-flex;align-items:center;justify-content:center;gap:5px;border:1px solid #88cfc8;background:#fff;color:var(--brand-ink);
+  border-radius:7px;padding:6px 8px;font-size:9px;font-weight:800;white-space:nowrap;cursor:pointer}
+
+.glance-panel{padding:0 15px;width:270px}.glance-title{padding:15px 0 11px;border-bottom:1px solid var(--line);font-size:15px;font-weight:800}
+.glance-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:9px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.glance-item:last-child{border-bottom:0}.glance-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#edf7f7;color:var(--brand);font-size:19px}
+.glance-icon.bad{background:#fdebe8;color:var(--bad)}.glance-icon.ok{background:#e4f6ed;color:var(--ok)}
+.glance-copy span{display:block;color:var(--muted);font-size:9px}.glance-copy strong{display:block;margin-top:3px;font-size:17px}
+.glance-detail{text-align:right;color:var(--muted);font-size:9px}.glance-detail strong{display:block;color:var(--ok);font-size:11px}
+.dashboard-note{padding:14px 4px 0;text-align:center;color:#8a9ba7;font-size:9px}
+
+.card{box-shadow:var(--shadow);border-color:var(--line)}
+.search{background:var(--card);border-color:var(--line);padding:12px 14px}
+.chip{background:var(--card)}.chip.on{background:var(--navy);border-color:var(--navy)}
+.topbar{background:var(--navy-deep);box-shadow:0 8px 24px -20px rgba(2,41,67,.8)}
+.topbar .logo{font-size:0}.topbar .icon{color:#fff}.stat.accent{background:var(--brand)}
+.fab{display:none;background:var(--brand);box-shadow:0 14px 28px -18px rgba(5,108,102,.9)}
+.modal{font-family:"Manrope",sans-serif}.modal h3{color:var(--ink);letter-spacing:-.025em}
+.toast{font-family:"Manrope",sans-serif;background:var(--navy);color:#fff}
+
+@media(max-width:1180px){
+  .dash-layout{grid-template-columns:1fr}.glance-panel{display:none}
+}
+@media(max-width:920px){
+  .sidebar{width:86px;flex-basis:86px;padding:18px 10px}.brand-lockup{justify-content:center;padding:0 0 18px}.brand-mark{width:50px;height:50px}
+  .brand-copy,.side-nav .tab span,.staff-copy,.side-date span,.side-settings span{display:none}.side-nav .tab{justify-content:center;padding:12px}.side-nav .tab:hover{transform:none}
+  .staff-card,.side-settings,.side-date{justify-content:center}.staff-avatar{width:38px;height:38px}.workspace-header{padding-left:20px;padding-right:20px}.screen{padding-left:20px;padding-right:20px}
+  .pipeline-pro{display:flex;overflow-x:auto}.pipeline-pro .pipeseg{flex:0 0 158px}.kpi-grid{grid-template-columns:1fr 1fr}.orders-head{display:none}
+  .order-data-row{grid-template-columns:72px 1fr 86px 76px 120px 20px}.order-data-row .order-load,.order-data-row .stage-time,.order-data-row .payment-cell{display:none}
+}
+@media(max-width:680px){
+  body{font-size:13px}.app-shell{display:block}.sidebar{position:sticky;top:0;width:100%;height:auto;padding:8px 10px;display:flex;flex-direction:row;align-items:center;gap:8px}
+  .brand-lockup{padding:0}.brand-mark{width:38px;height:38px}.side-nav{flex:1;display:grid;grid-template-columns:repeat(4,1fr);gap:4px}.side-nav .tab{padding:9px 6px}.side-nav .tab i{font-size:19px}.sidebar-spacer,.side-divider,.sidebar-foot{display:none}
+  .workspace-header{padding:16px 14px 13px;align-items:flex-start}.page-eyebrow{display:none}.page-title{font-size:23px}.page-subtitle{font-size:11px}.header-date{display:none}
+  .page-intro{gap:7px}.greeting-icon{width:34px;height:34px;font-size:27px}
+  .primary-action{padding:10px 12px}.primary-action span{display:none}.screen{padding:0 14px 96px}.pipeline-pro{padding:10px 6px}.pipeline-pro .pipeseg{flex-basis:148px}
+  .kpi-grid{grid-template-columns:1fr 1fr;gap:8px}.kpi{min-height:96px;padding:14px}.kpi-sales{grid-column:1/-1}.sales-illustration{width:92px;height:70px}.kpi-value{font-size:24px}.kpi-icon{width:42px;height:42px;font-size:22px}
+  .panel-head{padding:12px}.ready-order{padding:12px}.orders-head{display:none}.order-data-row{grid-template-columns:68px minmax(0,1fr) 76px 20px;padding:10px 12px;gap:7px}
+  .order-data-row .order-load,.order-data-row .stage-time,.order-data-row .payment-cell,.order-data-row .order-amount{display:none}.order-next{font-size:0;padding:8px}.order-next i{font-size:14px}
+  .fab{display:block}.topbar{position:sticky}.screen>.stats{grid-template-columns:1fr 1fr}.frow{flex-direction:column}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
 </style>
 </head>
 <body>
 <div id="app"></div>
-<button id="fab" class="fab">+ Order</button>
+<button id="fab" class="fab"><i class="ri-add-line"></i><span>New order</span></button>
 <div id="modalRoot"></div>
-<div id="toastRoot"></div>
+<div id="toastRoot" role="status" aria-live="polite"></div>
 <div id="printRoot"></div>
 <script>
 "use strict";
@@ -267,6 +442,22 @@ function ago(ts){const m=Math.round((Date.now()-ts)/60000);
   if(m<1)return"just now"; if(m<60)return m+"m ago";
   const h=Math.round(m/60); if(h<24)return h+"h ago";
   return Math.round(h/24)+"d ago";}
+const PH_TZ="Asia/Manila";
+function phDate(){return new Intl.DateTimeFormat("en-PH",{
+  timeZone:PH_TZ,weekday:"long",month:"long",day:"numeric",year:"numeric"
+}).format(new Date());}
+function phDateParts(){const parts=new Intl.DateTimeFormat("en-PH",{
+  timeZone:PH_TZ,weekday:"long",month:"long",day:"numeric",year:"numeric"
+}).formatToParts(new Date());
+  const val=t=>(parts.find(p=>p.type===t)||{}).value||"";
+  return{weekday:val("weekday"),date:`${val("month")} ${val("day")}, ${val("year")}`};}
+function stageStartedAt(o){const log=Array.isArray(o.log)?o.log:[];
+  const latest=log.slice().reverse().find(x=>x&&x.status===o.status&&x.at);
+  return latest?latest.at:o.created;}
+function elapsedShort(ts){const minutes=Math.max(0,Math.floor((Date.now()-ts)/60000));
+  if(minutes<60)return`${Math.max(1,minutes)} min`;
+  const hours=Math.floor(minutes/60);if(hours<24)return`${hours}h ${minutes%60}m`;
+  return`${Math.floor(hours/24)}d ${hours%24}h`;}
 
 /* ============================== data ============================== */
 const STATUSES=[
@@ -305,7 +496,7 @@ function normalize(s){s=s||{};
   s.orders=Array.isArray(s.orders)?s.orders:[];
   s.counter=s.counter||1001;
   s.orders.forEach(o=>{o.items=o.items||[];o.addons=o.addons||[];
-    o.discount=o.discount||0;o.status=o.status||"received";});
+    o.discount=o.discount||0;o.status=o.status||"received";o.log=Array.isArray(o.log)?o.log:[];});
   return s;}
 
 function seed(){
@@ -347,7 +538,18 @@ let orderQuery="";
 function go(t){workspace=null;view=t;render();}
 function back(){workspace=null;render();}
 
-const TABS=[["dash","Dashboard"],["orders","Orders"],["customers","Customers"],["reports","Reports"]];
+const TABS=[
+  ["dash","Dashboard","ri-dashboard-2-line"],
+  ["orders","Orders","ri-file-list-3-line"],
+  ["customers","Customers","ri-team-line"],
+  ["reports","Reports","ri-bar-chart-2-line"]
+];
+const PAGE_META={
+  dash:{eyebrow:"Operations",title:"Magandang araw, Staff!",subtitle:"Here’s a clear view of today’s laundry flow."},
+  orders:{eyebrow:"Work queue",title:"Laundry orders",subtitle:"Track every load from intake to customer pickup."},
+  customers:{eyebrow:"Customer care",title:"Customers",subtitle:"Keep customer details and order history close at hand."},
+  reports:{eyebrow:"Business overview",title:"Reports",subtitle:"Review sales, services, and operational performance."}
+};
 
 function render(){
   const app=$("#app");
@@ -355,28 +557,86 @@ function render(){
   else if(workspace&&workspace.type==="order"){app.innerHTML=renderOrderDetail(workspace.id);}
   else if(workspace&&workspace.type==="customer"){app.innerHTML=renderCustomerDetail(workspace.id);}
   else{
+    const meta=PAGE_META[view];
+    const date=phDateParts();
+    const newCustomer=view==="customers";
     app.innerHTML=`
-      <header class="topbar">
-        <span class="logo">🫧</span>
-        <div class="grow">
-          <div class="ttl">${esc(state.settings.shopName)}</div>
-          <div class="sub">${new Date().toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric"})}</div>
-        </div>
-        <button class="icon" id="settingsBtn" aria-label="Settings">⚙️</button>
-      </header>
-      <nav class="tabs">
-        ${TABS.map(([k,l])=>`<button class="tab ${view===k?'on':''}" data-tab="${k}">${l}</button>`).join("")}
-      </nav>
-      <main class="screen">${
-        view==="dash"?renderDash():
-        view==="orders"?renderOrders():
-        view==="customers"?renderCustomers():renderReports()
-      }</main>`;
+      <div class="app-shell">
+        <aside class="sidebar">
+          <div class="brand-lockup">
+            <img class="brand-mark" src="assets/sudsflow-logo-mark.png" alt="">
+            <div class="brand-copy">
+              <div class="brand-name">SudsFlow <span>Laundry</span></div>
+              <div class="brand-tag">Clean clothes.<br>Clear workflow.</div>
+            </div>
+          </div>
+          <nav class="side-nav" aria-label="Primary navigation">
+            ${TABS.map(([k,l,icon])=>`<button class="tab ${view===k?'on':''}" data-tab="${k}" ${view===k?'aria-current="page"':''}>
+              <i class="${icon}" aria-hidden="true"></i><span>${l}</span></button>`).join("")}
+          </nav>
+          <div class="sidebar-spacer"></div>
+          <div class="sidebar-foot">
+            <div class="staff-card"><div class="staff-avatar">ST</div>
+              <div class="staff-copy"><strong>Staff</strong><span>Front Desk</span></div></div>
+            <div class="side-divider"></div>
+            <button class="side-settings" id="sideSettings"><i class="ri-settings-3-line" aria-hidden="true"></i><span>Settings</span></button>
+            <div class="side-divider"></div>
+            <div class="side-date"><i class="ri-calendar-line" aria-hidden="true"></i><span>${esc(date.weekday)}<br>${esc(date.date)}</span></div>
+          </div>
+        </aside>
+        <section class="workspace-area">
+          <header class="workspace-header">
+            <div class="page-intro">
+              ${view==="dash"?`<div class="greeting-icon"><i class="ri-sun-line" aria-hidden="true"></i></div>`:""}
+              <div>
+                ${view!=="dash"?`<div class="page-eyebrow">${meta.eyebrow}</div>`:""}
+                <h1 class="page-title">${meta.title}</h1>
+                <p class="page-subtitle">${meta.subtitle}</p>
+              </div>
+            </div>
+            <div class="header-actions">
+              <div class="header-date"><i class="ri-calendar-line" aria-hidden="true"></i>${esc(phDate())}</div>
+              <button class="primary-action" id="headerPrimary" data-action="${newCustomer?'customer':'order'}">
+                <i class="ri-add-line" aria-hidden="true"></i><span>${newCustomer?'New customer':'New order'}</span></button>
+            </div>
+          </header>
+          <main class="screen">${
+            view==="dash"?renderDash():
+            view==="orders"?renderOrders():
+            view==="customers"?renderCustomers():renderReports()
+          }</main>
+        </section>
+      </div>`;
   }
   wire();renderFab();
 }
 
 /* ============================== dashboard ============================== */
+const STATUS_ICON={received:"ri-inbox-archive-line",washing:"ri-loader-4-line",drying:"ri-drop-line",
+  folding:"ri-shirt-line",ready:"ri-checkbox-circle-line",claimed:"ri-shopping-bag-3-line"};
+function orderLoad(o){const kg=o.items.filter(i=>i.unit==="kg").reduce((a,i)=>a+Number(i.qty||0),0);
+  const pcs=o.items.filter(i=>i.unit==="pc").reduce((a,i)=>a+Number(i.qty||0),0);
+  return[kg?`${kg%1?kg.toFixed(1):kg} kg`:"",pcs?`${pcs} pc`:""].filter(Boolean).join(" + ")||"—";}
+function renderReadyOrder(o){const c=custById(o.customerId)||{name:"Walk-in"};
+  return `<div class="ready-order" data-openorder="${o.id}"><div>
+    <div class="order-primary"><span class="ocode">${esc(o.code)}</span><strong>${esc(c.name)}</strong>
+      <span class="pill st-ready">READY</span><span class="pay-pill ${o.paid?'pay-paid':'pay-unpaid'}">${o.paid?'PAID':'UNPAID'}</span></div>
+    <div class="order-secondary">${orderLoad(o)} · Ready ${ago(stageStartedAt(o))}</div></div>
+    <div class="ready-action"><strong>${peso(orderTotal(o))}</strong>
+      <button class="next next-strong" data-adv="${o.id}"><i class="ri-check-line" aria-hidden="true"></i> Mark claimed</button></div></div>`;}
+function renderOrderDataRow(o){const c=custById(o.customerId)||{name:"Walk-in",phone:""};
+  const nx=nextStatus(o.status),stageAt=stageStartedAt(o),aged=Date.now()-stageAt>4*3600000;
+  return `<div class="order-data-row" data-openorder="${o.id}">
+    <span class="ocode">${esc(o.code)}</span>
+    <div class="order-customer"><strong>${esc(c.name)}</strong><span>${esc(c.phone||"Walk-in customer")}</span></div>
+    <span class="order-load">${orderLoad(o)}</span>
+    <span class="row-stage st-${o.status}"><i class="${STATUS_ICON[o.status]}" aria-hidden="true"></i>${STATUS_LABEL[o.status]}</span>
+    <span class="stage-time ${aged?'aged':''}">${elapsedShort(stageAt)}</span>
+    <span class="payment-cell pay-pill ${o.paid?'pay-paid':'pay-unpaid'}">${o.paid?'PAID':'UNPAID'}</span>
+    <strong class="order-amount">${peso(orderTotal(o))}</strong>
+    ${nx?`<button class="order-next" data-adv="${o.id}">Mark ${STATUS_LABEL[nx]} <i class="ri-arrow-right-line" aria-hidden="true"></i></button>`:`<span></span>`}
+    <button class="row-more" aria-label="Open ${esc(o.code)}"><i class="ri-more-2-fill" aria-hidden="true"></i></button>
+  </div>`;}
 function renderDash(){
   const t0=new Date();t0.setHours(0,0,0,0);
   const todays=state.orders.filter(o=>o.created>=t0.getTime());
@@ -385,29 +645,50 @@ function renderDash(){
   const ready=state.orders.filter(o=>o.status==="ready");
   const unpaid=state.orders.filter(o=>!o.paid&&o.status!=="claimed");
   const unpaidAmt=unpaid.reduce((a,o)=>a+orderTotal(o),0);
-  // machine-load pipeline strip: kg + order count per active stage
-  const SEGC={received:"#64748b",washing:"#0ea5e9",drying:"#f59e0b",folding:"#8b5cf6",ready:"#10b981"};
-  const pipe=STATUSES.slice(0,5).map(([k,l])=>{
+  const claimed=state.orders.filter(o=>o.status==="claimed");
+  const claimedAvg=claimed.length?elapsedShort(Date.now()-claimed.reduce((a,o)=>a+(Date.now()-o.created),0)/claimed.length):"—";
+  const activeStages=new Set(inprog.map(o=>o.status)).size;
+  const readyAmt=ready.reduce((a,o)=>a+orderTotal(o),0);
+  const recent=state.orders.slice().sort((a,b)=>b.created-a.created).slice(0,5);
+  const pipe=STATUSES.map(([k,l],idx)=>{
     const os=state.orders.filter(o=>o.status===k);
     const kg=os.reduce((a,o)=>a+o.items.filter(i=>i.unit==="kg")
       .reduce((x,i)=>x+Number(i.qty||0),0),0);
-    return `<div class="pipeseg ${os.length?"":"empty-seg"}" title="${os.length} order(s)">
-      <div class="dot" style="background:${SEGC[k]}"></div>
-      <div class="k">${kg%1?kg.toFixed(1):kg}<span class="muted" style="font-size:10px"> kg</span></div>
-      <div class="s">${l} · ${os.length}</div></div>`;}).join("");
+    return `<div class="pipeseg stage-${k} ${os.length?"":"empty-seg"}" title="${os.length} order(s) in ${l.toLowerCase()}">
+      <div class="stage-icon"><i class="${STATUS_ICON[k]}" aria-hidden="true"></i></div>
+      <div class="stage-copy"><div class="k">${kg%1?kg.toFixed(1):kg}<span class="muted" style="font-size:10px"> kg</span></div>
+      <div class="s">${l} · ${os.length}</div></div><div class="stage-underline"></div>
+      ${idx<STATUSES.length-1?`<i class="stage-arrow ri-arrow-right-s-line" aria-hidden="true"></i>`:""}</div>`;}).join("");
   return `
-    <div class="pipe">${pipe}</div>
-    <div class="stats">
-      <div class="stat accent"><div class="l">Today's sales</div><div class="v">${peso(sales)}</div></div>
-      <div class="stat"><div class="l">Orders today</div><div class="v">${todays.length}</div></div>
-      <div class="stat"><div class="l">In progress</div><div class="v">${inprog.length}</div></div>
-      <div class="stat"><div class="l">Unpaid (${unpaid.length})</div><div class="v">${peso(unpaidAmt)}</div></div>
+    <div class="pipeline-pro">${pipe}</div>
+    <div class="kpi-grid">
+      <div class="kpi kpi-sales"><div><div class="kpi-label">Today’s sales</div><strong class="kpi-value">${peso(sales)}</strong>
+        <div class="kpi-meta">${todays.filter(o=>o.paid).length} paid order${todays.filter(o=>o.paid).length===1?'':'s'} today</div></div>
+        <img class="sales-illustration" src="assets/laundry-basket-line.png" alt=""></div>
+      <div class="kpi"><div><div class="kpi-label">Orders today</div><strong class="kpi-value">${todays.length}</strong><div class="kpi-meta">New loads received</div></div>
+        <div class="kpi-icon"><i class="ri-file-list-3-line" aria-hidden="true"></i></div></div>
+      <div class="kpi"><div><div class="kpi-label">In progress</div><strong class="kpi-value">${inprog.length}</strong><div class="kpi-meta">Across 4 active stages</div></div>
+        <div class="kpi-icon"><i class="ri-timer-line" aria-hidden="true"></i></div></div>
+      <div class="kpi kpi-unpaid"><div><div class="kpi-label">Unpaid</div><strong class="kpi-value">${peso(unpaidAmt)}</strong><div class="kpi-meta">${unpaid.length} open balance${unpaid.length===1?'':'s'}</div></div>
+        <div class="kpi-icon"><i class="ri-wallet-3-line" aria-hidden="true"></i></div></div>
     </div>
-    <div class="sechead">Ready for pickup ${ready.length?`<span class="pill st-ready">${ready.length}</span>`:""}</div>
-    ${ready.length?ready.map(orderCard).join(""):`<div class="card muted small">Nothing waiting for pickup. 🎉</div>`}
-    <div class="sechead">Recent orders <button class="lnk" data-tab="orders">See all ›</button></div>
-    ${state.orders.slice().sort((a,b)=>b.created-a.created).slice(0,5).map(orderCard).join("")||
-      `<div class="empty"><div class="big">🧺</div>No orders yet.<br>Tap <b>+ Order</b> to start.</div>`}`;
+    <div class="dash-layout"><div class="dash-main">
+      <section class="panel ready-panel"><div class="panel-head"><div class="panel-title"><i class="ri-checkbox-circle-line" aria-hidden="true"></i><div>
+        <strong>Ready for pickup ${ready.length?`<span class="pill st-ready">${ready.length}</span>`:""}</strong><span>Orders waiting at the counter</span></div></div>
+        <button class="panel-link" data-tab="orders">View all <i class="ri-arrow-right-line" aria-hidden="true"></i></button></div>
+        ${ready.length?ready.slice(0,2).map(renderReadyOrder).join(""):`<div class="empty"><div class="big"><i class="ri-checkbox-circle-line"></i></div>Nothing is waiting for pickup.</div>`}</section>
+      <section class="panel orders-panel"><div class="panel-head"><div class="panel-title"><i class="ri-file-list-3-line" aria-hidden="true"></i><div>
+        <strong>Active orders</strong><span>Recent loads across every stage</span></div></div>
+        <button class="panel-link" data-tab="orders">View all <i class="ri-arrow-right-line" aria-hidden="true"></i></button></div>
+        <div class="orders-head"><span>Order</span><span>Customer</span><span>Load</span><span>Stage</span><span>Time in stage</span><span>Payment</span><span>Amount</span><span>Action</span><span></span></div>
+        ${recent.length?recent.map(renderOrderDataRow).join(""):`<div class="empty"><div class="big"><i class="ri-inbox-line"></i></div>No orders yet.</div>`}</section>
+      </div><aside class="panel glance-panel"><div class="glance-title">At a glance</div>
+        <div class="glance-item"><div class="glance-icon"><i class="ri-file-list-3-line"></i></div><div class="glance-copy"><span>Orders today</span><strong>${todays.length}</strong></div><div class="glance-detail">${todays.length}<strong>received</strong></div></div>
+        <div class="glance-item"><div class="glance-icon"><i class="ri-timer-line"></i></div><div class="glance-copy"><span>In progress</span><strong>${inprog.length}</strong></div><div class="glance-detail">${activeStages}<strong>stages</strong></div></div>
+        <div class="glance-item"><div class="glance-icon bad"><i class="ri-wallet-3-line"></i></div><div class="glance-copy"><span>Unpaid orders</span><strong>${unpaid.length}</strong></div><div class="glance-detail">Total<strong>${peso(unpaidAmt)}</strong></div></div>
+        <div class="glance-item"><div class="glance-icon ok"><i class="ri-shopping-bag-3-line"></i></div><div class="glance-copy"><span>Ready for pickup</span><strong>${ready.length}</strong></div><div class="glance-detail">Total<strong>${peso(readyAmt)}</strong></div></div>
+        <div class="glance-item"><div class="glance-icon"><i class="ri-time-line"></i></div><div class="glance-copy"><span>Avg. turnaround</span><strong>${claimedAvg}</strong></div><div class="glance-detail">${claimed.length}<strong>completed</strong></div></div>
+      </aside></div><div class="dashboard-note">All times are shown in Philippine Standard Time (PHT).</div>`;
 }
 
 /* ============================== orders list ============================== */
@@ -429,7 +710,7 @@ function orderCard(o){
       </div>
       <div>
         <div class="oamt">${peso(orderTotal(o))}</div>
-        ${nx&&o.status!=="claimed"?`<button class="next" data-adv="${o.id}">→ ${STATUS_LABEL[nx]}</button>`:""}
+        ${nx&&o.status!=="claimed"?`<button class="next" data-adv="${o.id}">${STATUS_LABEL[nx]} <i class="ri-arrow-right-line" aria-hidden="true"></i></button>`:""}
       </div>
     </div>
   </div>`;
@@ -451,9 +732,9 @@ function renderOrders(){
       return o.code.toLowerCase().includes(q)||(c&&c.name.toLowerCase().includes(q))||
              (c&&c.phone&&c.phone.replace(/\s/g,"").includes(q.replace(/\s/g,"")));});}
   return `
-    <input class="search" id="orderSearch" placeholder="Search code, name, or phone…" value="${esc(orderQuery)}">
+    <input class="search" id="orderSearch" aria-label="Search orders" placeholder="Search code, name, or phone…" value="${esc(orderQuery)}">
     <div class="chiprow">${chips}</div>
-    ${list.map(orderCard).join("")||`<div class="empty"><div class="big">🧺</div>No matching orders.</div>`}`;
+    ${list.map(orderCard).join("")||`<div class="empty"><div class="big"><i class="ri-inbox-line"></i></div>No matching orders.</div>`}`;
 }
 
 /* ============================== order detail ============================== */
@@ -465,10 +746,10 @@ function renderOrderDetail(id){
   const nx=nextStatus(o.status);
   return `
     <header class="topbar">
-      <button class="icon" id="backBtn" aria-label="Back">‹</button>
+      <button class="icon" id="backBtn" aria-label="Back"><i class="ri-arrow-left-line"></i></button>
       <div class="grow"><div class="ttl">${esc(o.code)}</div>
         <div class="sub">${fmtDT(o.created)}</div></div>
-      <button class="icon" id="delOrder" aria-label="Delete">🗑️</button>
+      <button class="icon" id="delOrder" aria-label="Delete"><i class="ri-delete-bin-6-line"></i></button>
     </header>
     <main class="screen">
       <div class="card">
@@ -476,7 +757,7 @@ function renderOrderDetail(id){
           `<div class="step ${i<stepIdx?'done':''} ${i===stepIdx?'here':''}">${l}</div>`).join("")}</div>
         ${nx?`<button class="btn" style="width:100%;margin-top:10px" data-adv="${o.id}">
           Mark as ${STATUS_LABEL[nx]}</button>`:
-          `<div class="muted small" style="text-align:center;margin-top:8px">Order complete ✅</div>`}
+          `<div class="muted small" style="text-align:center;margin-top:8px"><i class="ri-checkbox-circle-line"></i> Order complete</div>`}
       </div>
       <div class="card">
         <div class="row"><div class="grow">
@@ -496,9 +777,9 @@ function renderOrderDetail(id){
           <div class="grow">Discount</div><div>−${peso(o.discount)}</div></div>`:""}
         <div class="totalbar"><div class="muted">Total</div><div class="t">${peso(orderTotal(o))}</div></div>
         <div class="row" style="margin-top:10px;gap:8px">
-          <button class="btn sm ${o.paid?'ghost':''}" id="togglePaid">${o.paid?"Mark unpaid":"Mark paid 💵"}</button>
-          <button class="btn sm soft" id="viewReceipt">Receipt 🧾</button>
-          ${c.phone?`<button class="btn sm soft" id="notifyBtn">Notify 📲</button>`:""}
+          <button class="btn sm ${o.paid?'ghost':''}" id="togglePaid"><i class="ri-wallet-3-line"></i> ${o.paid?"Mark unpaid":"Mark paid"}</button>
+          <button class="btn sm soft" id="viewReceipt"><i class="ri-receipt-line"></i> Receipt</button>
+          ${c.phone?`<button class="btn sm soft" id="notifyBtn"><i class="ri-notification-3-line"></i> Notify</button>`:""}
         </div>
       </div>
       ${o.notes?`<div class="card"><div class="muted small">Notes</div>${esc(o.notes)}</div>`:""}
@@ -508,14 +789,14 @@ function renderOrderDetail(id){
 function advance(id){
   const o=state.orders.find(x=>x.id===id);if(!o)return;
   const nx=nextStatus(o.status);if(!nx)return;
-  o.status=nx;save();render();
+  o.status=nx;o.log=Array.isArray(o.log)?o.log:[];o.log.push({status:nx,at:Date.now()});save();render();
   toast(o.code+" → "+STATUS_LABEL[nx]);
 }
 
 function notifyText(o){
   const c=custById(o.customerId)||{name:""};
   return `Hi ${c.name.split(" ")[0]}! Your laundry (${o.code}) at ${state.settings.shopName} is ${
-    o.status==="ready"?"READY for pickup 🎉":"now "+STATUS_LABEL[o.status].toLowerCase()}. Total: ${peso(orderTotal(o))}${o.paid?" (paid)":""}. Thank you!`;
+    o.status==="ready"?"READY for pickup":"now "+STATUS_LABEL[o.status].toLowerCase()}. Total: ${peso(orderTotal(o))}${o.paid?" (paid)":""}. Thank you!`;
 }
 function openNotify(o){
   const c=custById(o.customerId)||{};
@@ -565,7 +846,7 @@ function openReceipt(o){
     <div class="rcptwrap"><div class="receipt">
       <div class="claimtag">${esc(o.code)}</div>${esc(txt)}</div></div>
     <div class="row" style="gap:8px">
-      <button class="btn sm" id="printBtn">Print 🖨️</button>
+      <button class="btn sm" id="printBtn"><i class="ri-printer-line"></i> Print</button>
       <button class="btn sm soft" id="copyRcpt">Copy</button>
     </div>`);
   $("#printBtn").onclick=()=>{$("#printRoot").textContent=txt;window.print();};
@@ -596,14 +877,14 @@ function renderNewOrder(){
   const{sub,disc,total}=draftTotals();
   return `
     <header class="topbar">
-      <button class="icon" id="backBtn" aria-label="Cancel">‹</button>
+      <button class="icon" id="backBtn" aria-label="Cancel"><i class="ri-arrow-left-line"></i></button>
       <div class="grow"><div class="ttl">New order</div></div>
     </header>
     <main class="screen">
       <div class="card">
         <label class="f">Customer</label>
         <div class="frow">
-          <select id="d-cust">
+          <select id="d-cust" aria-label="Customer">
             <option value="">— Walk-in / select —</option>${custOpts}
           </select>
           <button class="btn sm soft" id="d-newcust" style="flex:0 0 auto">+ New</button>
@@ -617,16 +898,16 @@ function renderNewOrder(){
           const q=parseFloat(it.qty)||0;
           const amt=q>0?Math.max(s.rate*q,s.min||0):0;
           return `<div class="svcline">
-            <select data-line-svc="${i}">${state.services.map(sv=>
+            <select data-line-svc="${i}" aria-label="Service ${i+1}">${state.services.map(sv=>
               `<option value="${sv.id}" ${sv.id===it.serviceId?"selected":""}>${esc(sv.name)} (${peso(sv.rate)}/${sv.unit})</option>`).join("")}</select>
             <div class="qtybox">
               <button class="qbtn minus" data-line-dec="${i}" aria-label="Less">−</button>
-              <input type="number" inputmode="decimal" min="0" step="0.5" placeholder="${s.unit}"
+              <input type="number" inputmode="decimal" min="0" step="0.5" aria-label="Quantity for ${esc(s.name)}" placeholder="${s.unit}"
                 value="${esc(it.qty)}" data-line-qty="${i}">
               <button class="qbtn plus" data-line-inc="${i}" aria-label="More">+</button>
             </div>
             <div class="amt" data-line-amt="${i}">${peso(amt)}</div>
-            <button class="icon" data-line-del="${i}" ${draft.items.length<2?"disabled":""}>✕</button>
+            <button class="icon" data-line-del="${i}" aria-label="Remove service" ${draft.items.length<2?"disabled":""}><i class="ri-delete-bin-6-line"></i></button>
           </div>
           ${s.unit==="kg"?`<div class="presets">${[3,5,8].map(p=>
             `<button class="preset" data-line-preset="${i}" data-preset-val="${p}">${p} kg</button>`).join("")}</div>`:""}`;
@@ -641,9 +922,9 @@ function renderNewOrder(){
       <div class="card">
         <div class="frow">
           <div><label class="f">Discount (${esc(state.settings.currency)})</label>
-            <input type="number" inputmode="decimal" min="0" id="d-disc" value="${esc(draft.discount)}" placeholder="0"></div>
+            <input type="number" inputmode="decimal" min="0" id="d-disc" aria-label="Discount" value="${esc(draft.discount)}" placeholder="0"></div>
           <div><label class="f">Payment</label>
-            <select id="d-pay">
+            <select id="d-pay" aria-label="Payment status and method">
               <option value="later" ${!draft.paid?"selected":""}>Pay on pickup</option>
               <option value="Cash" ${draft.paid&&draft.payMethod==="Cash"?"selected":""}>Paid — Cash</option>
               <option value="GCash" ${draft.paid&&draft.payMethod==="GCash"?"selected":""}>Paid — GCash</option>
@@ -651,7 +932,7 @@ function renderNewOrder(){
             </select></div>
         </div>
         <label class="f">Notes</label>
-        <input id="d-notes" placeholder="e.g. separate whites, deliver after 5pm" value="${esc(draft.notes)}">
+        <input id="d-notes" aria-label="Order notes" placeholder="e.g. separate whites, deliver after 5pm" value="${esc(draft.notes)}">
         <div class="totalbar">
           <div><div class="muted small" id="d-sub">Subtotal ${peso(sub)}${disc?` − ${peso(disc)}`:""}</div>
             <div class="muted small">Total due</div></div>
@@ -704,7 +985,7 @@ function renderCustomers(){
     list=list.filter(c=>c.name.toLowerCase().includes(q)||
       (c.phone&&c.phone.replace(/\s/g,"").includes(q.replace(/\s/g,""))));}
   return `
-    <input class="search" id="custSearch" placeholder="Search customers…" value="${esc(custQuery)}">
+    <input class="search" id="custSearch" aria-label="Search customers" placeholder="Search customers…" value="${esc(custQuery)}">
     ${list.map(c=>{
       const os=state.orders.filter(o=>o.customerId===c.id);
       const spend=os.reduce((a,o)=>a+orderTotal(o),0);
@@ -725,11 +1006,11 @@ function renderCustomerDetail(id){
   const spend=os.reduce((a,o)=>a+orderTotal(o),0);
   return `
     <header class="topbar">
-      <button class="icon" id="backBtn" aria-label="Back">‹</button>
+      <button class="icon" id="backBtn" aria-label="Back"><i class="ri-arrow-left-line"></i></button>
       <div class="grow"><div class="ttl">${esc(c.name)}</div>
         <div class="sub">${esc(c.phone||"")}</div></div>
-      <button class="icon" id="editCust">✏️</button>
-      <button class="icon" id="delCust">🗑️</button>
+      <button class="icon" id="editCust" aria-label="Edit customer"><i class="ri-edit-line"></i></button>
+      <button class="icon" id="delCust" aria-label="Delete customer"><i class="ri-delete-bin-6-line"></i></button>
     </header>
     <main class="screen">
       <div class="stats">
@@ -801,7 +1082,7 @@ function renderReports(){
         <div class="bval">${peso(v)}</div></div>`).join("")||`<div class="muted small">No data yet.</div>`}
     </div>
     <div class="sechead">Unpaid orders ${unpaid.length?`<span class="pay-pill pay-unpaid">${unpaid.length}</span>`:""}</div>
-    ${unpaid.map(orderCard).join("")||`<div class="card muted small">All caught up — nothing unpaid. ✅</div>`}
+    ${unpaid.map(orderCard).join("")||`<div class="card muted small"><i class="ri-checkbox-circle-line"></i> All caught up — nothing unpaid.</div>`}
     <div class="row" style="gap:8px;margin-top:14px">
       <button class="btn sm ghost" id="exportBtn">Export backup</button>
       <button class="btn sm ghost" id="importBtn">Import</button>
@@ -884,8 +1165,8 @@ function importJSON(file){
 function openModal(html){
   $("#modalRoot").innerHTML=`
     <div class="backdrop" id="mBack">
-      <div class="modal" role="dialog" aria-modal="true">
-        <button class="icon close" id="mClose" aria-label="Close">✕</button>${html}
+      <div class="modal" role="dialog" aria-modal="true" aria-label="SudsFlow dialog">
+        <button class="icon close" id="mClose" aria-label="Close"><i class="ri-close-line"></i></button>${html}
       </div></div>`;
   $("#mBack").onclick=e=>{if(e.target.id==="mBack")closeModal();};
   $("#mClose").onclick=closeModal;
@@ -899,9 +1180,10 @@ function renderFab(){
   if(workspace&&workspace.type==="neworder"){fab.style.display="none";return;}
   if(workspace&&workspace.type==="order"){fab.style.display="none";return;}
   if(workspace&&workspace.type==="customer"){fab.style.display="none";return;}
-  if(view==="customers"){action=()=>customerModal();label="+ Customer";}
-  else{action=()=>startDraft();label="+ Order";}
-  fab.textContent=label;fab.style.display="";fab.onclick=action;
+  if(view==="customers"){action=()=>customerModal();label="New customer";}
+  else{action=()=>startDraft();label="New order";}
+  fab.innerHTML=`<i class="ri-add-line" aria-hidden="true"></i><span>${label}</span>`;
+  fab.style.display="";fab.onclick=action;
 }
 
 /* ============================== wiring ============================== */
@@ -909,6 +1191,9 @@ function wire(){
   $$("[data-tab]").forEach(b=>b.onclick=()=>go(b.dataset.tab));
   $("#backBtn")&&($("#backBtn").onclick=back);
   $("#settingsBtn")&&($("#settingsBtn").onclick=settingsModal);
+  $("#sideSettings")&&($("#sideSettings").onclick=settingsModal);
+  $("#headerPrimary")&&($("#headerPrimary").onclick=e=>{
+    if(e.currentTarget.dataset.action==="customer")customerModal();else startDraft();});
   $$("[data-openorder]").forEach(el=>el.onclick=e=>{
     if(e.target.closest("[data-adv]"))return;
     workspace={type:"order",id:el.dataset.openorder};render();});
