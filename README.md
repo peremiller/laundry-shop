@@ -25,15 +25,14 @@ money at the end of the week.
 
 ## Running it
 
-Open `index.html` directly in a browser — no build step, no dependencies, works offline.
-
-Or serve it locally:
+Install dependencies and start the Vite development server:
 
 ```bash
-python3 -m http.server 4770 --directory ~/laundry-shop
+npm install
+npm run dev
 ```
 
-Then visit http://localhost:4770
+Production is deployed from the `master` branch through Vercel.
 
 ## Data storage
 
@@ -52,4 +51,3 @@ delete the sample customers and orders when you start entering live data.
 
 Revenue and report figures are computed only from whatever orders exist in your local
 data, including seeded ones, until you remove them.
-
