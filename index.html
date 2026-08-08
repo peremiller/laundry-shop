@@ -564,7 +564,7 @@ function render(){
       <div class="app-shell">
         <aside class="sidebar">
           <div class="brand-lockup">
-            <img class="brand-mark" src="assets/sudsflow-logo-mark.png" alt="">
+            <img class="brand-mark" src="${document.querySelector('link[rel="icon"]')?.href||''}" alt="">
             <div class="brand-copy">
               <div class="brand-name">SudsFlow <span>Laundry</span></div>
               <div class="brand-tag">Clean clothes.<br>Clear workflow.</div>
@@ -664,7 +664,7 @@ function renderDash(){
     <div class="kpi-grid">
       <div class="kpi kpi-sales"><div><div class="kpi-label">Today’s sales</div><strong class="kpi-value">${peso(sales)}</strong>
         <div class="kpi-meta">${todays.filter(o=>o.paid).length} paid order${todays.filter(o=>o.paid).length===1?'':'s'} today</div></div>
-        <img class="sales-illustration" src="assets/laundry-basket-line.png" alt=""></div>
+        <img class="sales-illustration" src="${document.querySelector('link[rel="preload"][as="image"]')?.href||''}" alt=""></div>
       <div class="kpi"><div><div class="kpi-label">Orders today</div><strong class="kpi-value">${todays.length}</strong><div class="kpi-meta">New loads received</div></div>
         <div class="kpi-icon"><i class="ri-file-list-3-line" aria-hidden="true"></i></div></div>
       <div class="kpi"><div><div class="kpi-label">In progress</div><strong class="kpi-value">${inprog.length}</strong><div class="kpi-meta">Across 4 active stages</div></div>
