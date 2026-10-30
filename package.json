@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build && node scripts/offline/build.mjs --dir dist --name \"SudsFlow\" --spa --limits \"Browser-local laundry operations and saved records remain available.\"",
+    "test:offline": "node --test scripts/offline/offline.test.mjs scripts/offline/client.test.mjs"
   },
   "devDependencies": {
     "vite": "^8.2.1"
