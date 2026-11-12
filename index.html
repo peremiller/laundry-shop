@@ -533,12 +533,28 @@ const custById=id=>state.customers.find(c=>c.id===id);
 const orderTotal=o=>Math.max(0,(o.subtotal||0)-(o.discount||0));
 
 /* ============================== routing ============================== */
-let view="dash";           // dash | orders | customers | reports
-let workspace=null;        // {type:"order"|"customer"|"neworder", id}
-let orderFilter="active";  // active | all | one of STATUSES
+const VALID_VIEWS=new Set(["dash","orders","customers","reports"]);
+function viewFromUrl(){
+  const requested=new URL(window.location.href).searchParams.get("tab");
+  return VALID_VIEWS.has(requested)?requested:"dash";
+}
+let view=viewFromUrl();   // stable tab deep links, existing / URL remains Dashboard
+let workspace=null;       // {type:"order"|"customer"|"neworder", id}
+let orderFilter="active"; // active | all | one of STATUSES
 let orderQuery="";
-function go(t){workspace=null;view=t;render();}
+function go(t){
+  if(!VALID_VIEWS.has(t))return;
+  workspace=null;view=t;
+  const target=new URL(window.location.href);
+  if(t==="dash")target.searchParams.delete("tab");
+  else target.searchParams.set("tab",t);
+  if(target.href!==window.location.href)window.history.pushState({sudsflowTab:t},"",target.href);
+  render();
+}
 function back(){workspace=null;render();}
+window.addEventListener("popstate",()=>{
+  workspace=null;view=viewFromUrl();render();
+});
 
 const TABS=[
   ["dash","Dashboard","ri-dashboard-2-line"],
