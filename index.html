@@ -1169,13 +1169,43 @@ function exportJSON(){
   a.download=`laundry-backup-${todayISO()}.json`;
   a.click();URL.revokeObjectURL(a.href);
 }
+// Accept only SudsFlow-shaped backups. An arbitrary JSON file must never
+// replace orders, customers, prices, or settings with normalized defaults.
+function isValidLaundryBackup(data){
+  if(!data||typeof data!=="object"||Array.isArray(data))return false;
+  const groups=["services","addons","customers","orders"];
+  if(!groups.every(key=>Array.isArray(data[key])&&data[key].every(
+    row=>row&&typeof row==="object"&&!Array.isArray(row))))return false;
+  if(data.settings!=null&&(typeof data.settings!=="object"||Array.isArray(data.settings)))return false;
+  if(!data.services.every(item=>typeof item.id==="string"&&typeof item.name==="string"))return false;
+  if(!data.addons.every(item=>typeof item.id==="string"&&typeof item.name==="string"))return false;
+  if(!data.customers.every(item=>typeof item.id==="string"&&typeof item.name==="string"))return false;
+  if(!data.orders.every(order=>typeof order.id==="string"&&Array.isArray(order.items)&&
+    order.items.every(item=>item&&typeof item==="object"&&!Array.isArray(item))&&
+    (order.addons==null||Array.isArray(order.addons))))return false;
+  return true;
+}
 function importJSON(file){
   const r=new FileReader();
-  r.onload=()=>{try{
-    const data=JSON.parse(r.result);
+  r.onload=()=>{
+    let data;
+    try{data=JSON.parse(r.result);}
+    catch(e){toast("Invalid JSON backup. Existing data was not changed.");return;}
+    if(!isValidLaundryBackup(data)){
+      toast("Not a valid SudsFlow backup. Existing data was not changed.");return;
+    }
     if(!confirm("Replace all current data with the imported file?"))return;
-    state=normalize(data);save();render();toast("Imported");
-  }catch(e){toast("Invalid file");}};
+    // Commit storage first. If quota/access is denied, retain the in-memory
+    // workspace as well as the previous saved data instead of losing orders.
+    let restored;
+    try{
+      restored=normalize(data);
+      localStorage.setItem(LS,JSON.stringify(restored));
+    }catch(e){toast("Import could not be saved. Existing data was not changed.");return;}
+    state=restored;
+    render();toast("Imported");
+  };
+  r.onerror=()=>toast("Unable to read backup. Existing data was not changed.");
   r.readAsText(file);
 }
 
