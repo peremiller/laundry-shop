@@ -1,0 +1,32 @@
+name: SudsFlow backup safety and production build
+on:
+  pull_request:
+    paths:
+      - index.html
+      - package.json
+      - package-lock.json
+      - tests/**
+      - .github/workflows/sudsflow-quality.yml
+  push:
+    branches: [master]
+    paths:
+      - index.html
+      - package.json
+      - package-lock.json
+      - tests/**
+      - .github/workflows/sudsflow-quality.yml
+permissions:
+  contents: read
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
