@@ -268,7 +268,11 @@ body{background:var(--bg);font-family:"Manrope",-apple-system,BlinkMacSystemFont
   color:var(--ink);font-size:14px;letter-spacing:-.01em;overflow-x:hidden}
 button,input,select,textarea{font-family:inherit}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
-  outline:3px solid rgba(20,184,166,.3);outline-offset:2px}
+  outline:3px solid #07364d;outline-offset:3px;box-shadow:0 0 0 2px #fff}
+@media (prefers-color-scheme: dark){
+  button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+    outline-color:#fde68a;box-shadow:0 0 0 2px #09212d}
+}
 
 .app-shell{min-height:100vh;display:flex;background:var(--bg)}
 .sidebar{position:sticky;top:0;align-self:flex-start;width:218px;height:100vh;flex:0 0 218px;
@@ -740,7 +744,7 @@ function renderOrders(){
   state.orders.forEach(o=>{counts[o.status]++;
     if(o.status!=="claimed")counts.active++;});
   const chips=[["active","Active"],["all","All"],...STATUSES].map(([k,l])=>
-    `<button class="chip ${orderFilter===k?'on':''}" data-filter="${k}">${l}${
+    `<button class="chip ${orderFilter===k?'on':''}" data-filter="${k}" aria-pressed="${orderFilter===k?'true':'false'}">${l}${
       k==="all"?` ${state.orders.length}`:counts[k]?` ${counts[k]}`:""}</button>`).join("");
   let list=state.orders.slice().sort((a,b)=>b.created-a.created);
   if(orderFilter==="active")list=list.filter(o=>o.status!=="claimed");
@@ -1248,7 +1252,12 @@ function wire(){
   $$("[data-opencust]").forEach(el=>el.onclick=()=>{
     workspace={type:"customer",id:el.dataset.opencust};render();});
   $$("[data-adv]").forEach(b=>b.onclick=e=>{e.stopPropagation();advance(b.dataset.adv);});
-  $$("[data-filter]").forEach(b=>b.onclick=()=>{orderFilter=b.dataset.filter;render();});
+  $("[data-filter]").forEach(b=>b.onclick=()=>{
+    const selected=b.dataset.filter;
+    orderFilter=selected;render();
+    const replacement=Array.from($("[data-filter]")).find(chip=>chip.dataset.filter===selected);
+    replacement?.focus({preventScroll:true});
+  });
   const os=$("#orderSearch");
   if(os){os.oninput=()=>{orderQuery=os.value;
     const keep=os.selectionStart;render();
