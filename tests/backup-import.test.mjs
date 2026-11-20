@@ -98,3 +98,29 @@ test("intentional empty but structurally complete backup is supported",()=>{
   assert.equal(result.writes.length,1);
   assert.equal(result.renders,1);
 });
+
+
+test("order status chips announce active filtering and retain the selected order list",()=>{
+  const begin=html.indexOf("function renderOrders(){");
+  const finish=html.indexOf("/* ============================== order detail",begin);
+  assert.ok(begin>0&&finish>begin,"Use exact production order list renderer");
+  const context={
+    state:{orders:[
+      {id:"ready-1",status:"ready",created:2},
+      {id:"claimed-1",status:"claimed",created:1},
+    ]},
+    STATUSES:[["ready","Ready"],["claimed","Claimed"]],
+    orderFilter:"ready",
+    orderQuery:"",
+    esc:value=>value,
+    orderCard:order=>'<article data-order="'+order.id+'"></article>',
+  };
+  const markup=runInNewContext(html.slice(begin,finish)+"\nrenderOrders()",context);
+  assert.match(markup,/data-filter="ready" aria-pressed="true"/);
+  assert.match(markup,/data-filter="all" aria-pressed="false"/);
+  assert.match(markup,/data-order="ready-1"/);
+  assert.doesNotMatch(markup,/data-order="claimed-1"/);
+  assert.match(html,/replacement\?\.focus\(\{preventScroll:true\}\)/);
+  assert.match(html,/button:focus-visible,a:focus-visible/);
+  assert.doesNotMatch(html,/outline:3px solid rgba\(20,184,166,\.3\)/);
+});
