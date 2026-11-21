@@ -1214,16 +1214,39 @@ function importJSON(file){
 }
 
 /* ============================== modal ============================== */
+let modalRestoreFocus=null;
 function openModal(html){
+  // Remember the launch control so keyboard users return to their work.
+  if(!$("#modalRoot").innerHTML)modalRestoreFocus=document.activeElement;
   $("#modalRoot").innerHTML=`
     <div class="backdrop" id="mBack">
-      <div class="modal" role="dialog" aria-modal="true" aria-label="SudsFlow dialog">
+      <div class="modal" role="dialog" aria-modal="true" aria-label="SudsFlow dialog" tabindex="-1">
         <button class="icon close" id="mClose" aria-label="Close"><i class="ri-close-line"></i></button>${html}
       </div></div>`;
   $("#mBack").onclick=e=>{if(e.target.id==="mBack")closeModal();};
   $("#mClose").onclick=closeModal;
+  const dialog=$("#mBack .modal");
+  dialog.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){e.preventDefault();closeModal();return;}
+    if(e.key!=="Tab")return;
+    const controls=Array.from(dialog.querySelectorAll(
+      'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+    )).filter(el=>!el.hidden&&el.getClientRects().length);
+    if(!controls.length){e.preventDefault();dialog.focus();return;}
+    const first=controls[0],last=controls[controls.length-1];
+    if(e.shiftKey&&(document.activeElement===first||!dialog.contains(document.activeElement))){
+      e.preventDefault();last.focus();
+    }else if(!e.shiftKey&&(document.activeElement===last||!dialog.contains(document.activeElement))){
+      e.preventDefault();first.focus();
+    }
+  });
+  $("#mClose").focus();
 }
-function closeModal(){$("#modalRoot").innerHTML="";}
+function closeModal(){
+  $("#modalRoot").innerHTML="";
+  if(modalRestoreFocus?.isConnected)modalRestoreFocus.focus();
+  modalRestoreFocus=null;
+}
 
 /* ============================== FAB ============================== */
 function renderFab(){
