@@ -124,3 +124,68 @@ test("order status chips announce active filtering and retain the selected order
   assert.match(html,/button:focus-visible,a:focus-visible/);
   assert.doesNotMatch(html,/outline:3px solid rgba\(20,184,166,\.3\)/);
 });
+
+
+test("modal keyboard focus stays inside, Escape closes and original trigger regains focus",()=>{
+  const begin=html.indexOf("let modalRestoreFocus=null;");
+  const end=html.indexOf("/* ============================== FAB",begin);
+  assert.ok(begin>0&&end>begin,"Execute the real SudsFlow modal implementation");
+  const document={activeElement:null};
+  const trigger={isConnected:true,focus(){document.activeElement=this;}};
+  const close={hidden:false,getClientRects(){return [1];},focus(){document.activeElement=this;}};
+  const cancel={hidden:false,getClientRects(){return [1];},focus(){document.activeElement=this;}};
+  const root={innerHTML:""};
+  const backdrop={id:"mBack"};
+  const dialog={
+    onKey:null,
+    addEventListener(name,handler){if(name==="keydown")this.onKey=handler;},
+    querySelectorAll(){return [close,cancel];},
+    contains(node){return node===this||node===close||node===cancel;},
+    focus(){document.activeElement=this;}
+  };
+  const nodes={"#modalRoot":root,"#mBack":backdrop,"#mClose":close,"#mBack .modal":dialog};
+  const context={document,$:selector=>nodes[selector]};
+  trigger.focus();
+  runInNewContext(html.slice(begin,end),context);
+  context.openModal("<button>Cancel</button>");
+  assert.strictEqual(document.activeElement,close,"opening the dialog moves focus inside");
+  assert.match(root.innerHTML,/aria-modal="true"/);
+  assert.match(root.innerHTML,/tabindex="-1"/);
+  function keyboard(key,shiftKey=false){
+    let prevented=false;
+    dialog.onKey({key,shiftKey,preventDefault(){prevented=true;}});
+    return prevented;
+  }
+  cancel.focus();
+  assert.equal(keyboard("Tab"),true);
+  assert.strictEqual(document.activeElement,close,"Tab cycles from last to first");
+  assert.equal(keyboard("Tab",true),true);
+  assert.strictEqual(document.activeElement,cancel,"Shift+Tab cycles first to last");
+  assert.equal(keyboard("Escape"),true);
+  assert.equal(root.innerHTML,"");
+  assert.strictEqual(document.activeElement,trigger,"Escape restores launch focus");
+  context.openModal("<p>Review</p>");
+  assert.strictEqual(document.activeElement,close);
+  backdrop.onclick({target:{id:"mBack"}});
+  assert.strictEqual(document.activeElement,trigger,"backdrop dismissal restores focus");
+});
+
+test("closing a modal avoids focusing a removed launch control",()=>{
+  const begin=html.indexOf("let modalRestoreFocus=null;");
+  const end=html.indexOf("/* ============================== FAB",begin);
+  const document={activeElement:null};
+  let focusCalls=0;
+  const removed={isConnected:true,focus(){focusCalls++;document.activeElement=this;}};
+  const close={focus(){document.activeElement=this;}};
+  const root={innerHTML:""};
+  const dialog={addEventListener(){},querySelectorAll(){return[];}};
+  const nodes={"#modalRoot":root,"#mBack":{},"#mClose":close,"#mBack .modal":dialog};
+  const context={document,$:selector=>nodes[selector]};
+  removed.focus();
+  runInNewContext(html.slice(begin,end),context);
+  context.openModal("<p>Review</p>");
+  removed.isConnected=false;
+  context.closeModal();
+  assert.equal(focusCalls,1,"do not refocus a removed trigger after a rerender");
+  assert.equal(root.innerHTML,"");
+});
