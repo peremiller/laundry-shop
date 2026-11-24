@@ -17,9 +17,9 @@ const sample={
   orders:[{id:"order-1",items:[{serviceId:"service-1",qty:2,rate:35,amount:70}],addons:[]}],
   settings:{shopName:"Demo"},counter:1002
 };
-function exercise(contents,{allow=true,failWrite=false,readError=false}={}){
+function exercise(contents,{allow=true,failWrite=false,readError=false,silentWrite=false}={}){
   const messages=[],writes=[];
-  let confirms=0,renders=0;
+  let confirms=0,renders=0,stored=null;
   const previous={orders:[{id:"existing-order"}],customers:[{id:"existing-customer"}]};
   class FakeReader{
     readAsText(file){
@@ -33,8 +33,8 @@ function exercise(contents,{allow=true,failWrite=false,readError=false}={}){
     normalize:d=>d,
     localStorage:{setItem(key,value){
       if(failWrite)throw Error("Storage denied");
-      writes.push({key,value});
-    }},
+      if(!silentWrite){writes.push({key,value});stored=value;}
+    },getItem(){return stored;}},
     confirm(){confirms++;return allow;},
     render(){renders++;},
     toast(message){messages.push(message);}
@@ -91,6 +91,13 @@ test("denied browser storage prevents replacing active workspace",()=>{
   assert.strictEqual(result.state,result.previous);
   assert.equal(result.writes.length,0);
   assert.equal(result.renders,0);
+  assert.match(result.messages.at(-1),/not changed/i);
+});
+test("silently rejected storage write preserves active workspace",()=>{
+  const result=exercise(JSON.stringify(sample),{silentWrite:true});
+  assert.strictEqual(result.state,result.previous);
+  assert.equal(result.renders,0);
+  assert.equal(result.writes.length,0);
   assert.match(result.messages.at(-1),/not changed/i);
 });
 test("intentional empty but structurally complete backup is supported",()=>{
