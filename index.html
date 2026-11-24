@@ -1204,8 +1204,10 @@ function importJSON(file){
     let restored;
     try{
       restored=normalize(data);
-      localStorage.setItem(LS,JSON.stringify(restored));
-    }catch(e){toast("Import could not be saved. Existing data was not changed.");return;}
+      const serialized=JSON.stringify(restored);
+      localStorage.setItem(LS,serialized);
+      if(localStorage.getItem(LS)!==serialized)throw Error("Storage write not confirmed");
+    }catch(e){toast("Import could not be saved or verified. The active workspace was not changed.");return;}
     state=restored;
     render();toast("Imported");
   };
