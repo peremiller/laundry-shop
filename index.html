@@ -268,7 +268,11 @@ body{background:var(--bg);font-family:"Manrope",-apple-system,BlinkMacSystemFont
   color:var(--ink);font-size:14px;letter-spacing:-.01em;overflow-x:hidden}
 button,input,select,textarea{font-family:inherit}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
-  outline:3px solid rgba(20,184,166,.3);outline-offset:2px}
+  outline:3px solid #07364d;outline-offset:3px;box-shadow:0 0 0 2px #fff}
+@media (prefers-color-scheme: dark){
+  button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+    outline-color:#fde68a;box-shadow:0 0 0 2px #09212d}
+}
 
 .app-shell{min-height:100vh;display:flex;background:var(--bg)}
 .sidebar{position:sticky;top:0;align-self:flex-start;width:218px;height:100vh;flex:0 0 218px;
@@ -523,10 +527,22 @@ function seed(){
   [o4,o1,o2,o3].forEach(o=>{o.code="LS-"+(st.counter++);st.orders.push(o);});
   return st;}
 
-function boot(){try{const r=localStorage.getItem(LS);if(r)return normalize(JSON.parse(r));}catch(e){}
-  return normalize(seed());}
+function boot(){
+  try{
+    const raw=localStorage.getItem(LS);
+    if(raw!==null){
+      const saved=JSON.parse(raw);
+      if(!isValidLaundryBackup(saved))return null;
+      // Opening the workspace must not rewrite existing saved bytes.
+      return normalize(saved);
+    }
+    const fresh=normalize(seed());
+    const encoded=JSON.stringify(fresh);
+    localStorage.setItem(LS,encoded);
+    return localStorage.getItem(LS)===encoded?fresh:null;
+  }catch(e){return null;}
+}
 let state=boot();
-localStorage.setItem(LS,JSON.stringify(state));
 function save(){localStorage.setItem(LS,JSON.stringify(state));}
 
 const custById=id=>state.customers.find(c=>c.id===id);
@@ -571,6 +587,21 @@ const PAGE_META={
 
 function render(){
   const app=$("#app");
+  if(state===null){
+    // Do not display seeded orders as real records after a failed storage read.
+    // Recovery uses the existing validated, explicitly confirmed backup import.
+    $("#fab").style.display="none";
+    app.innerHTML=`<main class="screen" style="max-width:36rem;margin:2rem auto;padding:1rem">
+      <h1>Saved workspace unavailable</h1>
+      <p role="alert">The saved workspace could not be loaded or initialized. Existing records have not been automatically replaced. Retry after checking browser storage, or restore a valid backup.</p>
+      <button type="button" class="btn soft" id="storageRetry">Retry loading</button>
+      <p><label for="storageBackup">Restore a SudsFlow JSON backup</label></p>
+      <input id="storageBackup" type="file" accept=".json,application/json">
+    </main>`;
+    $("#storageRetry").onclick=()=>{state=boot();render();};
+    $("#storageBackup").onchange=e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value="";};
+    return;
+  }
   if(workspace&&workspace.type==="neworder"){app.innerHTML=renderNewOrder();}
   else if(workspace&&workspace.type==="order"){app.innerHTML=renderOrderDetail(workspace.id);}
   else if(workspace&&workspace.type==="customer"){app.innerHTML=renderCustomerDetail(workspace.id);}
@@ -740,7 +771,7 @@ function renderOrders(){
   state.orders.forEach(o=>{counts[o.status]++;
     if(o.status!=="claimed")counts.active++;});
   const chips=[["active","Active"],["all","All"],...STATUSES].map(([k,l])=>
-    `<button class="chip ${orderFilter===k?'on':''}" data-filter="${k}">${l}${
+    `<button class="chip ${orderFilter===k?'on':''}" data-filter="${k}" aria-pressed="${orderFilter===k?'true':'false'}">${l}${
       k==="all"?` ${state.orders.length}`:counts[k]?` ${counts[k]}`:""}</button>`).join("");
   let list=state.orders.slice().sort((a,b)=>b.created-a.created);
   if(orderFilter==="active")list=list.filter(o=>o.status!=="claimed");
@@ -1169,27 +1200,82 @@ function exportJSON(){
   a.download=`laundry-backup-${todayISO()}.json`;
   a.click();URL.revokeObjectURL(a.href);
 }
+// Accept only SudsFlow-shaped backups. An arbitrary JSON file must never
+// replace orders, customers, prices, or settings with normalized defaults.
+function isValidLaundryBackup(data){
+  if(!data||typeof data!=="object"||Array.isArray(data))return false;
+  const groups=["services","addons","customers","orders"];
+  if(!groups.every(key=>Array.isArray(data[key])&&data[key].every(
+    row=>row&&typeof row==="object"&&!Array.isArray(row))))return false;
+  if(data.settings!=null&&(typeof data.settings!=="object"||Array.isArray(data.settings)))return false;
+  if(!data.services.every(item=>typeof item.id==="string"&&typeof item.name==="string"))return false;
+  if(!data.addons.every(item=>typeof item.id==="string"&&typeof item.name==="string"))return false;
+  if(!data.customers.every(item=>typeof item.id==="string"&&typeof item.name==="string"))return false;
+  if(!data.orders.every(order=>typeof order.id==="string"&&Array.isArray(order.items)&&
+    order.items.every(item=>item&&typeof item==="object"&&!Array.isArray(item))&&
+    (order.addons==null||Array.isArray(order.addons))))return false;
+  return true;
+}
 function importJSON(file){
   const r=new FileReader();
-  r.onload=()=>{try{
-    const data=JSON.parse(r.result);
+  r.onload=()=>{
+    let data;
+    try{data=JSON.parse(r.result);}
+    catch(e){toast("Invalid JSON backup. Existing data was not changed.");return;}
+    if(!isValidLaundryBackup(data)){
+      toast("Not a valid SudsFlow backup. Existing data was not changed.");return;
+    }
     if(!confirm("Replace all current data with the imported file?"))return;
-    state=normalize(data);save();render();toast("Imported");
-  }catch(e){toast("Invalid file");}};
+    // Commit storage first. If quota/access is denied, retain the in-memory
+    // workspace as well as the previous saved data instead of losing orders.
+    let restored;
+    try{
+      restored=normalize(data);
+      const serialized=JSON.stringify(restored);
+      localStorage.setItem(LS,serialized);
+      if(localStorage.getItem(LS)!==serialized)throw Error("Storage write not confirmed");
+    }catch(e){toast("Import could not be saved or verified. The active workspace was not changed.");return;}
+    state=restored;
+    render();toast("Imported");
+  };
+  r.onerror=()=>toast("Unable to read backup. Existing data was not changed.");
   r.readAsText(file);
 }
 
 /* ============================== modal ============================== */
+let modalRestoreFocus=null;
 function openModal(html){
+  // Remember the launch control so keyboard users return to their work.
+  if(!$("#modalRoot").innerHTML)modalRestoreFocus=document.activeElement;
   $("#modalRoot").innerHTML=`
     <div class="backdrop" id="mBack">
-      <div class="modal" role="dialog" aria-modal="true" aria-label="SudsFlow dialog">
+      <div class="modal" role="dialog" aria-modal="true" aria-label="SudsFlow dialog" tabindex="-1">
         <button class="icon close" id="mClose" aria-label="Close"><i class="ri-close-line"></i></button>${html}
       </div></div>`;
   $("#mBack").onclick=e=>{if(e.target.id==="mBack")closeModal();};
   $("#mClose").onclick=closeModal;
+  const dialog=$("#mBack .modal");
+  dialog.addEventListener("keydown",e=>{
+    if(e.key==="Escape"){e.preventDefault();closeModal();return;}
+    if(e.key!=="Tab")return;
+    const controls=Array.from(dialog.querySelectorAll(
+      'a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'
+    )).filter(el=>!el.hidden&&el.getClientRects().length);
+    if(!controls.length){e.preventDefault();dialog.focus();return;}
+    const first=controls[0],last=controls[controls.length-1];
+    if(e.shiftKey&&(document.activeElement===first||!dialog.contains(document.activeElement))){
+      e.preventDefault();last.focus();
+    }else if(!e.shiftKey&&(document.activeElement===last||!dialog.contains(document.activeElement))){
+      e.preventDefault();first.focus();
+    }
+  });
+  $("#mClose").focus();
 }
-function closeModal(){$("#modalRoot").innerHTML="";}
+function closeModal(){
+  $("#modalRoot").innerHTML="";
+  if(modalRestoreFocus?.isConnected)modalRestoreFocus.focus();
+  modalRestoreFocus=null;
+}
 
 /* ============================== FAB ============================== */
 function renderFab(){
@@ -1218,7 +1304,12 @@ function wire(){
   $$("[data-opencust]").forEach(el=>el.onclick=()=>{
     workspace={type:"customer",id:el.dataset.opencust};render();});
   $$("[data-adv]").forEach(b=>b.onclick=e=>{e.stopPropagation();advance(b.dataset.adv);});
-  $$("[data-filter]").forEach(b=>b.onclick=()=>{orderFilter=b.dataset.filter;render();});
+  $("[data-filter]").forEach(b=>b.onclick=()=>{
+    const selected=b.dataset.filter;
+    orderFilter=selected;render();
+    const replacement=Array.from($("[data-filter]")).find(chip=>chip.dataset.filter===selected);
+    replacement?.focus({preventScroll:true});
+  });
   const os=$("#orderSearch");
   if(os){os.oninput=()=>{orderQuery=os.value;
     const keep=os.selectionStart;render();
