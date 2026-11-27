@@ -196,3 +196,36 @@ test("closing a modal avoids focusing a removed launch control",()=>{
   assert.equal(focusCalls,1,"do not refocus a removed trigger after a rerender");
   assert.equal(root.innerHTML,"");
 });
+
+
+test("startup preserves saved bytes and refuses malformed or inaccessible storage",()=>{
+  const begin=html.indexOf("function boot(){"), end=html.indexOf("const custById",begin);
+  const start=html.indexOf("function isValidLaundryBackup(data){"), finish=html.indexOf("function importJSON",start);
+  assert.ok(begin>0&&end>begin&&start>0&&finish>start);
+  const bootCode=html.slice(start,finish)+html.slice(begin,end)+"\nstate";
+  function bootFrom(raw,{deny=false,silent=false}={}){
+    let stored=raw,writes=0;
+    const value=runInNewContext(bootCode,{LS:"sudsflow.v1",normalize:d=>d,seed:()=>sample,
+      localStorage:{getItem(){if(deny)throw Error("denied");return stored;},
+        setItem(key,value){writes++;if(!silent)stored=value;}}});
+    return {value,stored,writes};
+  }
+  const valid=JSON.stringify(sample,null,2);
+  const existing=bootFrom(valid);
+  assert.equal(existing.writes,0);
+  assert.equal(existing.stored,valid);
+  assert.equal(existing.value.orders[0].id,"order-1");
+  for(const raw of ["{broken","{}","null",""]){
+    const blocked=bootFrom(raw);
+    assert.equal(blocked.value,null);
+    assert.equal(blocked.stored,raw);
+    assert.equal(blocked.writes,0);
+  }
+  const denied=bootFrom(valid,{deny:true});
+  assert.equal(denied.value,null);
+  assert.equal(denied.writes,0);
+  const fresh=bootFrom(null);
+  assert.equal(fresh.writes,1);
+  assert.equal(fresh.value.orders[0].id,"order-1");
+  assert.equal(bootFrom(null,{silent:true}).value,null);
+});
