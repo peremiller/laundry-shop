@@ -527,10 +527,22 @@ function seed(){
   [o4,o1,o2,o3].forEach(o=>{o.code="LS-"+(st.counter++);st.orders.push(o);});
   return st;}
 
-function boot(){try{const r=localStorage.getItem(LS);if(r)return normalize(JSON.parse(r));}catch(e){}
-  return normalize(seed());}
+function boot(){
+  try{
+    const raw=localStorage.getItem(LS);
+    if(raw!==null){
+      const saved=JSON.parse(raw);
+      if(!isValidLaundryBackup(saved))return null;
+      // Opening the workspace must not rewrite existing saved bytes.
+      return normalize(saved);
+    }
+    const fresh=normalize(seed());
+    const encoded=JSON.stringify(fresh);
+    localStorage.setItem(LS,encoded);
+    return localStorage.getItem(LS)===encoded?fresh:null;
+  }catch(e){return null;}
+}
 let state=boot();
-localStorage.setItem(LS,JSON.stringify(state));
 function save(){localStorage.setItem(LS,JSON.stringify(state));}
 
 const custById=id=>state.customers.find(c=>c.id===id);
@@ -575,6 +587,21 @@ const PAGE_META={
 
 function render(){
   const app=$("#app");
+  if(state===null){
+    // Do not display seeded orders as real records after a failed storage read.
+    // Recovery uses the existing validated, explicitly confirmed backup import.
+    $("#fab").style.display="none";
+    app.innerHTML=`<main class="screen" style="max-width:36rem;margin:2rem auto;padding:1rem">
+      <h1>Saved workspace unavailable</h1>
+      <p role="alert">The saved workspace could not be loaded or initialized. Existing records have not been automatically replaced. Retry after checking browser storage, or restore a valid backup.</p>
+      <button type="button" class="btn soft" id="storageRetry">Retry loading</button>
+      <p><label for="storageBackup">Restore a SudsFlow JSON backup</label></p>
+      <input id="storageBackup" type="file" accept=".json,application/json">
+    </main>`;
+    $("#storageRetry").onclick=()=>{state=boot();render();};
+    $("#storageBackup").onchange=e=>{if(e.target.files[0])importJSON(e.target.files[0]);e.target.value="";};
+    return;
+  }
   if(workspace&&workspace.type==="neworder"){app.innerHTML=renderNewOrder();}
   else if(workspace&&workspace.type==="order"){app.innerHTML=renderOrderDetail(workspace.id);}
   else if(workspace&&workspace.type==="customer"){app.innerHTML=renderCustomerDetail(workspace.id);}
